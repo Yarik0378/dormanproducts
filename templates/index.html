@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <title>Scraper Dorman Products</title>
+  </head>
+  <body>
+  <style>
+      .form-block {
+              padding: 25px;
+    text-align: center;
+    font-size: 20px;
+      }
+      .btn-group-vertical{
+          width: 100%;
+      }
+      body {
+          background: aliceblue;
+      }
+      .col-md-3 {
+          margin-bottom: 30px;
+      }
+      .sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+  </style>
+<div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    {% for project in projects %}
+        <a href="#{{ project.id }}">{{ project.date }}</a>
+    {% endfor %}
+</div>
+  <div class="container-fluid" id="main">
+  <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button>
+      <div class="row">
+          <div class="col-12 form-block">
+               <form method="post" enctype="multipart/form-data" action="/add">
+                {% csrf_token %}
+                <input type="file" name="file">
+                <button type="submit" class="btn btn-primary">Upload</button>
+              </form>
+          </div>
+                {% for project in projects %}
+                            <div id="{{ project.id }}" class="col-md-3">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h5 class="card-title">Uploaded: {{ project.uploaded_file }}</h5>
+                                    <p class="card-text">
+                                        <p>Result: {{ project.result_file }}</p>
+                                        <p>Date: {{ project.date }}</p>
+                                        <p>Status: {{ project.status }} -   {{ project.finished_codes }} / {{ project.len_codes }}</p>
+                                    </p>
+                                      <p>ID: {{ project.id }}</p>
+                                      <div class="btn-group-vertical">
+                                            <a href="/media/documents/{{ project.id }}.txt" class="btn btn-primary">Check uploaded file</a>
+                                            <a href="/media/documents/{{ project.id }}result.csv" class="btn btn-success" download>Check result</a>
+                                            <a href="/delete/{{ project.id }}" class="btn btn-danger">Delete project</a>
+                                      </div>
+
+                                  </div>
+                                </div>
+                            </div>
+                {% endfor %}
+
+
+      </div>
+  </div>
+  </body>
+  <script>
+function openNav() {
+  document.getElementById("mySidebar").style.width = "300px";
+  document.getElementById("main").style.marginLeft = "300px";
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft= "unset";
+}
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+</html>
